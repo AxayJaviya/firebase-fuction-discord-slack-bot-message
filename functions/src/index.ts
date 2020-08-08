@@ -21,7 +21,7 @@ admin.initializeApp({
   databaseURL: process.env.FIREBASE_DATABASEURL
 });
 // Custom Services
-import { slackBot } from './services';
+import { slackBot, discordBot } from './services';
 
 
 export const postMessageToChannel = functions.https.onRequest((request, response) => {
@@ -32,15 +32,16 @@ export const postMessageToChannel = functions.https.onRequest((request, response
         throw new Error('Invalid request parameters');
       }
       const message = `User ${userId} is searching for a ${gameName} Match for ${betAmout}(€)`;
-      functions.logger.log('message: ', message);
-      // Note: We are not handling Exception in postMessage so it will throw an error and function executed with error response
+      console.log('message: ', message);
+      // Note: We are not handling Exception in postMessage for testing so, it will throw an error and function executed with error response
       // We can handle Exception in postMessage by wrapping function into Try-Catch block so normal function exection flow is achived
       await slackBot.postMessage(message);
+      await discordBot.postMessage(message);
       return response.status(200).json({
         status: 'success'
       });
     } catch (error) {
-      functions.logger.error(error.message);
+      console.error(error.message);
       return response.status(400).json({
         status: 'error',
         message: error.message

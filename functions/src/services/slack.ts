@@ -1,6 +1,4 @@
-const {
-  WebClient
-} = require('@slack/web-api');
+import { WebClient } from '@slack/web-api';
 
 
 /**
@@ -12,8 +10,8 @@ class SlackBot {
   // An access token (from your Slack app or custom integration - xoxp, xoxb)
   private token: string = process.env.SLACK_BOT_TOKEN as string;
   // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
-  private channel: string = process.env.SLACK_BOT_CHANNEL_ID as string;
-  private web: typeof WebClient;
+  private channelID: string = process.env.SLACK_BOT_CHANNEL_ID as string;
+  private web: WebClient;
 
   /**
    * The Singleton's constructor should always be private to prevent direct
@@ -42,7 +40,7 @@ class SlackBot {
   public postMessage = async (text: string) => {
     // See: https://api.slack.com/methods/chat.postMessage
     await this.web.chat.postMessage({
-      channel: this.channel,
+      channel: this.channelID,
       text
     });
   }
